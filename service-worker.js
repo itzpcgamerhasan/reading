@@ -1,11 +1,9 @@
 // service-worker.js
 const staticCacheName = 'static-v1';
 const assets = [
-  '/',
+  
   '/index.html',
-  '/style.css',
-  '/app.js',
-  // ... অন্যান্য ফাইল
+
 ];
 
 self.addEventListener('install', (event) => {
