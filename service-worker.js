@@ -1,7 +1,7 @@
 // Define cache name and files to cache
 const CACHE_NAME = 'offline-cache-v2';
 const FILES_TO_CACHE = [
-    '/read.html', // Adjust this path if it's different
+    '/index.html', // Adjust this path if it's different
     
 ];
 
