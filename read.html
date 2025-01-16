@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>পড়ার ট্র্যাকার</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #4CAF50;
+            margin: 10px 0;
+        }
+        h1:hover, h2:hover {
+            color: #388E3C;
+            transition: color 0.3s ease-in-out;
+        }
+        .date {
+            text-align: right;
+            font-size: 16px;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 12px;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+        }
+        td {
+            text-align: left;
+            background-color: #ffffff;
+        }
+        td:hover {
+            background-color: #f4f4f4;
+            transition: background-color 0.3s ease-in-out;
+        }
+        .history {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .history-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease-in-out, transform 0.2s ease;
+        }
+        .history-button:hover {
+            background-color: #388E3C;
+            transform: scale(1.05);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: black;
+            text-decoration: none;
+        }
+        .date-select {
+            margin-top: 10px;
+            font-size: 16px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .submit-button {
+            margin-top: 10px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease-in-out, transform 0.2s ease;
+        }
+        .submit-button:hover {
+            background-color: #388E3C;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="date" id="currentDate"></div>
+    <h1>পড়ার রুটিন</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>বিষয়ের নাম</th>
+                <th>পড়ার সময়</th>
+                <th>সম্পন্ন হয়েছে</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td id="label1">বাংলা প্রথম পত্র</td>
+                <td>সকাল ৬:৩০ - ৭:১০</td>
+                <td><input type="checkbox" id="subject1" onchange="saveProgress(this, 'subject1')"></td>
+            </tr>
+            <tr>
+                <td id="label2">বাংলা দ্বিতীয় পত্র</td>
+                <td>সকাল ৭:১০ - ৭:৫০</td>
+                <td><input type="checkbox" id="subject2" onchange="saveProgress(this, 'subject2')"></td>
+            </tr>
+            <tr>
+                <td id="label3">ইংরেজি প্রথম পত্র</td>
+                <td>সকাল ৭:৫০ - ৮:৩০</td>
+                <td><input type="checkbox" id="subject3" onchange="saveProgress(this, 'subject3')"></td>
+            </tr>
+            <!-- Add more rows as needed -->
+             <!-- সকাল ৯:০০ - ১১:৪০ -->
+            <tr>
+                <td>ইংরেজি ২য় পত্র</td>
+                <td>সকাল ৯:০০ - ৯:৪০</td>
+                <td><input type="checkbox" id="subject4" onchange="saveProgress(this, 'subject4')"></td>
+            </tr>
+            <tr>
+                <td>গণিত</td>
+                <td>সকাল ৯:৪০ - ১০:২০</td>
+                <td><input type="checkbox" id="subject5" onchange="saveProgress(this, 'subject5')"></td>
+            </tr>
+            <tr>
+                <td>উচ্চতর গণিত</td>
+                <td>সকাল ১০:২০ - ১১:০০</td>
+                <td><input type="checkbox" id="subject6" onchange="saveProgress(this, 'subject6')"></td>
+            </tr>
+            <tr>
+                <td>পদার্থ বিজ্ঞান</td>
+                <td>সকাল ১১:০০ - ১১:৪০</td>
+                <td><input type="checkbox" id="subject7" onchange="saveProgress(this, 'subject7')"></td>
+            </tr>
+
+            <!-- রাত ৭:০০ - ১০:২০ -->
+            <tr>
+                <td>রসায়ন</td>
+                <td>রাত ৭:০০ - ৭:৪০</td>
+                <td><input type="checkbox" id="subject8" onchange="saveProgress(this, 'subject8')"></td>
+            </tr>
+            <tr>
+                <td>জীববিজ্ঞান</td>
+                <td>রাত ৭:৪০ - ৮:২০</td>
+                <td><input type="checkbox" id="subject9" onchange="saveProgress(this, 'subject9')"></td>
+            </tr>
+            <tr>
+                <td>সমাজ</td>
+                <td>রাত ৮:২০ - ৯:০০</td>
+                <td><input type="checkbox" id="subject10" onchange="saveProgress(this, 'subject10')"></td>
+            </tr>
+            <tr>
+                <td>ইসলাম</td>
+                <td>রাত ৯:০০ - ৯:৪০</td>
+                <td><input type="checkbox" id="subject11" onchange="saveProgress(this, 'subject11')"></td>
+            </tr>
+            <tr>
+                <td>তথ্য ও যোগাযোগ প্রযুক্তি</td>
+                <td>রাত ৯:৪০ - ১০:২০</td>
+                <td><input type="checkbox" id="subject12" onchange="saveProgress(this, 'subject12')"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="history">
+        <button class="history-button" onclick="openHistoryModal()">ইতিহাস দেখুন</button>
+    </div>
+
+    <!-- Modal -->
+    <div id="historyModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeHistoryModal()">&times;</span>
+            <h2>ইতিহাস দেখুন</h2>
+            <select id="historyDates" class="date-select">
+                <option value="">তারিখ বাছাই করুন</option>
+            </select>
+            <br>
+            <button class="submit-button" onclick="showSelectedHistory()">দেখুন</button>
+            <p id="historyResult"></p>
+        </div>
+    </div>
+
+    <script>
+        function updateDate() {
+            const dateElement = document.getElementById('currentDate');
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            dateElement.textContent = now.toLocaleDateString('bn-BD', options);
+        }
+        updateDate();
+
+        function saveProgress(checkbox, id) {
+            const isChecked = checkbox.checked;
+            const now = new Date();
+            const dateKey = now.toISOString().split('T')[0];
+            const completedSubjects = JSON.parse(localStorage.getItem(dateKey) || '[]');
+
+            if (isChecked) {
+                if (!completedSubjects.includes(id)) completedSubjects.push(id);
+            } else {
+                const index = completedSubjects.indexOf(id);
+                if (index > -1) completedSubjects.splice(index, 1);
+            }
+
+            localStorage.setItem(dateKey, JSON.stringify(completedSubjects));
+        }
+
+        function loadProgress() {
+            const now = new Date();
+            const dateKey = now.toISOString().split('T')[0];
+            const completedSubjects = JSON.parse(localStorage.getItem(dateKey) || '[]');
+
+            completedSubjects.forEach(id => {
+                const checkbox = document.getElementById(id);
+                if (checkbox) checkbox.checked = true;
+            });
+        }
+
+        function resetProgressAtMidnight() {
+            const now = new Date();
+            const msUntilMidnight =
+                new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).getTime() - now.getTime();
+
+            setTimeout(() => {
+                localStorage.clear();
+                location.reload();
+            }, msUntilMidnight);
+        }
+
+        function openHistoryModal() {
+            const modal = document.getElementById('historyModal');
+            const historyDates = document.getElementById('historyDates');
+            modal.style.display = 'block';
+            historyDates.innerHTML = '<option value="">তারিখ বাছাই করুন</option>';
+
+            for (let i = 0; i < localStorage.length; i++) {
+                const dateKey = localStorage.key(i);
+                if (dateKey.includes('-')) {
+                    const option = document.createElement('option');
+                    option.value = dateKey;
+                    option.textContent = dateKey;
+                    historyDates.appendChild(option);
+                }
+            }
+        }
+
+        function closeHistoryModal() {
+            document.getElementById('historyModal').style.display = 'none';
+        }
+
+        function showSelectedHistory() {
+            const historyDates = document.getElementById('historyDates');
+            const dateKey = historyDates.value;
+            const historyResult = document.getElementById('historyResult');
+
+            if (dateKey) {
+                const completedSubjects = JSON.parse(localStorage.getItem(dateKey) || '[]');
+                const subjectNames = completedSubjects.map(id => document.querySelector(`#label${id.replace('subject', '')}`).textContent);
+                historyResult.textContent = `${dateKey} তারিখে সম্পন্ন হয়েছে: ${subjectNames.join(', ')}।`;
+            } else {
+                historyResult.textContent = 'অনুগ্রহ করে একটি তারিখ বাছাই করুন।';
+            }
+        }
+
+        loadProgress();
+        resetProgressAtMidnight();
+    </script>
+</body>
+</html>
