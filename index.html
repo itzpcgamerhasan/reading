@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>পড়ার ট্র্যাকার</title>
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600&display=swap" rel="stylesheet">
+    
     <style>
         body {
             font-family: 'Hind Siliguri', sans-serif;
@@ -220,7 +221,7 @@
             <p id="historyResult"></p>
         </div>
     </div>
-
+  
     <script>
         function updateDate() {
             const dateElement = document.getElementById('currentDate');
@@ -229,54 +230,55 @@
             dateElement.textContent = now.toLocaleDateString('bn-BD', options);
         }
         updateDate();
-
+    
         function saveProgress(checkbox, id) {
-            const isChecked = checkbox.checked;
             const now = new Date();
             const dateKey = now.toISOString().split('T')[0];
             const completedSubjects = JSON.parse(localStorage.getItem(dateKey) || '[]');
-
-            if (isChecked) {
+    
+            if (checkbox.checked) {
                 if (!completedSubjects.includes(id)) completedSubjects.push(id);
             } else {
                 const index = completedSubjects.indexOf(id);
                 if (index > -1) completedSubjects.splice(index, 1);
             }
-
+    
             localStorage.setItem(dateKey, JSON.stringify(completedSubjects));
         }
-
+    
         function loadProgress() {
             const now = new Date();
             const dateKey = now.toISOString().split('T')[0];
             const completedSubjects = JSON.parse(localStorage.getItem(dateKey) || '[]');
-
+    
             completedSubjects.forEach(id => {
                 const checkbox = document.getElementById(id);
                 if (checkbox) checkbox.checked = true;
             });
         }
-
+    
         function resetProgressAtMidnight() {
             const now = new Date();
             const msUntilMidnight =
                 new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).getTime() - now.getTime();
-
+    
             setTimeout(() => {
-                localStorage.clear();
-                location.reload();
+                location.reload(); // Refresh page at midnight
             }, msUntilMidnight);
         }
-
+    
         function openHistoryModal() {
             const modal = document.getElementById('historyModal');
             const historyDates = document.getElementById('historyDates');
             modal.style.display = 'block';
             historyDates.innerHTML = '<option value="">তারিখ বাছাই করুন</option>';
-
-            for (let i = 0; i < localStorage.length; i++) {
-                const dateKey = localStorage.key(i);
-                if (dateKey.includes('-')) {
+    
+            const now = new Date();
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(now);
+                date.setDate(now.getDate() - i);
+                const dateKey = date.toISOString().split('T')[0];
+                if (localStorage.getItem(dateKey)) {
                     const option = document.createElement('option');
                     option.value = dateKey;
                     option.textContent = dateKey;
@@ -284,39 +286,37 @@
                 }
             }
         }
-
+    
         function closeHistoryModal() {
             document.getElementById('historyModal').style.display = 'none';
         }
-
+    
         function showSelectedHistory() {
             const historyDates = document.getElementById('historyDates');
             const dateKey = historyDates.value;
             const historyResult = document.getElementById('historyResult');
-
+    
             if (dateKey) {
                 const completedSubjects = JSON.parse(localStorage.getItem(dateKey) || '[]');
-                const subjectNames = completedSubjects.map(id => document.querySelector(`#label${id.replace('subject', '')}`).textContent);
-                historyResult.textContent = `${dateKey} তারিখে সম্পন্ন হয়েছে: ${subjectNames.join(', ')}।`;
+                const subjectNames = completedSubjects.map(id => {
+                    const labelElement = document.querySelector(`#label${id.replace('subject', '')}`);
+                    return labelElement ? labelElement.textContent : '';
+                }).filter(name => name !== '');
+    
+                if (subjectNames.length > 0) {
+                    historyResult.innerHTML = `<strong>${dateKey}</strong> তারিখে সম্পন্ন হয়েছে:<ul>${subjectNames.map(name => `<li>${name}</li>`).join('')}</ul>`;
+                } else {
+                    historyResult.textContent = `${dateKey} তারিখে কোনো কাজ সম্পন্ন হয়নি।`;
+                }
             } else {
                 historyResult.textContent = 'অনুগ্রহ করে একটি তারিখ বাছাই করুন।';
             }
         }
-
-        loadProgress();
+    
+        window.onload = loadProgress;
         resetProgressAtMidnight();
     </script>
-    <script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/service-worker.js')
-    .then(registration => {
-      console.log('Service Worker registered: ', registration);
-    })
-    .catch(error => {
-      console.error('Service Worker registration failed: ', error);
-    });
-}
-    </script>
-  
+    
+
 </body>
 </html>
