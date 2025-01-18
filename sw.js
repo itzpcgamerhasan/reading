@@ -1,8 +1,8 @@
 // ফাইল কাঁচা করা
 const CACHE_NAME = "site-cache-v1";
 const urlsToCache = [
-  "/",
-  "/index.html",
+ 
+  "/reading/index.html",
   
 ];
 
