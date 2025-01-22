@@ -1,1101 +1,455 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>Reading Progress</title>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="icon512_rounded.png" type="image/x-icon">
     <link rel="manifest" href="manifest.json">
     <link rel="serviceWorker" href="sw.js">
-<script>
-    if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker
-      .register("sw.js")
-      .then((registration) => {
-        console.log("ServiceWorker registration successful with scope: ", registration.scope);
-      })
-      .catch((error) => {
-        console.error("ServiceWorker registration failed: ", error);
+    <script>
+        if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker
+          .register("sw.js")
+          .then((registration) => {
+            console.log("ServiceWorker registration successful with scope: ", registration.scope);
+          })
+          .catch((error) => {
+            console.error("ServiceWorker registration failed: ", error);
+          });
       });
-  });
-}
+    }
+    
+    </script>
 
-</script>
     <style>
-       /* Responsive CSS for Reading Progress App */
-body {
-    font-family: 'Hind Siliguri', sans-serif;
-    margin: 20px;
-    background-color: #f9f9f9;
-}
-
-h1, h2 {
-    text-align: center;
-    color: #4CAF50;
-    margin: 10px 0;
-}
-
-h1:hover, h2:hover {
-    color: #388E3C;
-    transition: color 0.3s ease-in-out;
-}
-
-.date {
-    text-align: right;
-    font-size: 16px;
+       body {
+    font-family:"Roboto Condensed", serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #f4f4f9;
     color: #333;
+} 
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            color: #2c3e50;
+            text-transform: uppercase;
+        }
+
+        #subjects {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 10px;
+            font-family: "Roboto Condensed", serif;
+            text-transform: uppercase;
+        }
+
+        .subject {
+            margin-bottom: 20px;
+            border: 1px solid #3498db;
+            background: #ffacac;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-left: 5px groove #3498db;
+            transition: 2s ease-in-out;
+        }
+
+        .subject input[type="text"] {
+            max-width: 100%;
+           padding-top: 8px;
+           padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: 'Roboto', sans-serif;
+            cursor: pointer;
+        }
+
+        .checkbox-label {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-left: 10px;
+        }
+
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+        }
+
+        .modal-content ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .modal-content li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-left: 4px solid #3498db;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .close-button {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .close-button:hover {
+            background-color: #c0392b;
+        }
+        /* Global Styles */
+
+
+/* Date Display */
+#current-date {
+    font-size:17px;
+    font-weight: 500;
+    color: #333;
+    text-align: center;
+    margin: 20px 0;
 }
 
-table {
+/* Subject and Progress Styles */
+
+
+.subject {
+    background-color: #fff;
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition:  0.5s ease-in-out;
+}
+
+.subject:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+    scale:0.98;
+    border-left:5px dotted #3498db
+}
+
+.subject h3 {
+    margin: 0;
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #4A90E2;
+}
+
+input[type="text"] {
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-table, th, td {
+    
+    margin-top: 10px;
     border: 1px solid #ccc;
-}
-
-th, td {
-    padding: 12px;
-}
-
-th {
-    background-color: #4CAF50;
-    color: white;
-    text-align: center;
-}
-
-td {
-    text-align: left;
-    background-color: #ffffff;
-}
-
-td:hover {
-    background-color: #f4f4f4;
-    transition: background-color 0.3s ease-in-out;
-}
-
-.history {
-    margin-top: 20px;
-    text-align: center;
-}
-
-.history-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 12px 18px;
-    border: none;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 1em;
+}
+
+input[type="checkbox"] {
+    margin-right: 10px;
     cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease-in-out, transform 0.2s ease;
+    margin-left: -10px;
+    width:15px;
+    height: 15px;
+   
 }
 
-.history-button:hover {
-    background-color: #388E3C;
-    transform: scale(1.05);
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    font-size: 1em;
 }
 
-.modal {
+/* History Modal Styles */
+#history-modal {
     display: none;
     position: fixed;
-    z-index: 1;
-    left: 0;
     top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    overflow: auto;
     background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
 }
 
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 90%;
-    max-width: 600px;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
-}
 
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-}
 
-.close:hover {
-    color: black;
-    text-decoration: none;
-}
-
-.date-select {
-    margin-top: 10px;
-    font-size: 16px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.submit-button {
-    margin-top: 10px;
-    background-color: #4CAF50;
-    color: white;
-    padding: 8px 12px;
+button {
+    padding: 10px 20px;
     border: none;
-    border-radius: 5px;
+    background-color: #077bff;
+    color: #fff;
+    font-size: 1em;
     cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s ease-in-out, transform 0.2s ease;
-}
-
-.submit-button:hover {
-    background-color: #388E3C;
-    transform: scale(1.05);
-}
-/* Style for the checkbox container */
-input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
-    appearance: none;
-    background-color: #f0f0f0;
-    border: 2px solid #ccc;
     border-radius: 5px;
-    outline: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
+    transition:  0.4s ease;
 }
 
-/* Style when the checkbox is checked */
-input[type="checkbox"]:checked {
-    background-color: #4caf50;
-    border-color: #4caf50;
-    position: relative;
-    width: 30px;
-    height: 30px;
-    
-    
+button:hover {
+    background-color: #002d5a;
+    scale: 1.1;
 }
 
-/* Add a checkmark when checked */
-input[type="checkbox"]:checked::after {
-    content: '';
-    display: block;
+/* Back Button Styles */
+button#back-btn {
     position: absolute;
-    width: 6px;
-    height: 14px;
-    border: solid white;
-    border-width: 0 3px 3px 0;
-    transform: rotate(45deg);
-    top: 2px;
-    left: 8px;
-    padding: 10 px;
-    
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1em;
 }
 
-/* Hover effect for the checkbox */
-input[type="checkbox"]:hover {
-    box-shadow: 1px  1px  rgb(114, 60, 60);
-    background-color: #ff6060;
-    border: #4CAF50;
-}
-
-/* Focused state for accessibility */
-input[type="checkbox"]:focus {
-    border-color: #4caf50;
-    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
-}
-/* Style for the comment input field */
-input[type="text"] {
-   width: 100%;
-    
-    max-height: 400px;
-    padding: 20px 12px;
-    font-size: 16px;
-    color: #333;
-    background-color: #f9f9f9;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-    outline: none;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* Placeholder text styling */
-input[type="text"]::placeholder {
-    color: #aaa;
-    font-style: italic;
-}
-
-/* Hover effect */
-input[type="text"]:hover {
-    border-color: #888;
-    background-color: #f0f0f0;
-}
-
-/* Focus effect */
-input[type="text"]:focus {
-    border-color: #4caf50;
-    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
-}
-
-/* Disabled state */
-input[type="text"]:disabled {
-    background-color: #e0e0e0;
-    border-color: #ccc;
-    color: #888;
-    cursor: not-allowed;
-}
-
+/* Responsive Design */
 @media (max-width: 768px) {
-    body {
-        margin: 10px;
+    #current-date {
+        font-size: 17px;
     }
 
-    .date {
-        text-align: center;
+    
+
+    input[type="text"] {
+        font-size: 0.9em;
+       
     }
 
-    table {
-        font-size: 20px;
-        margin-left: -3px;
+    .checkbox-label {
+        font-size: 0.9em;
     }
 
-    th, td {
-        padding: 8px;
+    button {
+        font-size: 0.9em;
     }
 
-    .timer-display {
-        font-size: 10px;
-    }
-
-    .timer-button {
-        padding: 2px;
-        font-size: 12px;
-        max-width:60px
-    }
-
-    .history-button {
-        font-size: 14px;
-        padding: 10px 15px;
-    }
-
-    .modal-content {
-        width: 95%;
-        padding: 15px;
-    }
-
-    .date-select, .submit-button {
-        font-size: 12px;
-    }
+   
 }
-.original-time-display {
-    font-size: 15px;
-}
+
 @media (max-width: 480px) {
-    .timer-display {
-        font-size: 14px;
+    #current-date {
+        font-size: 1.1em;
     }
 
-    table, th, td {
-        font-size: 15px;
+    
+    input[type="text"] {
+        font-size: 0.85em;
+        
     }
 
-    .history-button {
-        font-size: 12px;
-        padding: 8px 12px;
+    .checkbox-label {
+        font-size: 0.85em;
     }
 
-    .timer-button {
-        padding: 2;
-        font-size: 10px;
-        max-width: 60px;
+    button {
+        font-size: 0.85em;
     }
 
-    .date-select, .submit-button {
-        font-size: 10px;
-    }
+   
 }
 
     </style>
 </head>
 <body>
-    <div class="date" id="currentDate">২৭ জানুয়ারী, ২০২৫</div>
-    <h1>পড়ার রুটিন</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>বিষয়ের নাম</th>
-                <th>পড়ার সময়</th>
-                <th>টপিক/অধ্যায়</th>
-                <th>সম্পন্ন হয়েছে</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td id="label1">বাংলা প্রথম পত্র</td>
-                <td>
-                    <div id="timer1" class="timer-display">
-                        <span id="hours1">00</span>h 
-                        <span id="minutes1">00</span>m 
-                        <span id="seconds1">00</span>s
-                    </div>
-                
-                    <button class="timer-button" id="startButton1" onclick="showPopup('timer1')">Start</button>
-                    <button class="timer-button" id="startButton2" onclick="pauseTimer('timer1')">Pause</button>
-                </td>
-                <!-- cmnt -->
-<td>
-    <!-- নতুন ইনপুট ফিল্ড -->
-    <input type="text" id="comment1" placeholder="মন্তব্য দিন" oninput="saveComment('comment1')">
-</td>
-                <td><input type="checkbox" id="subject1" onchange="saveProgress(this, 'subject1')"></td>
 
+    <h1>Reading Progress</h1>
+    <div id="current-date" style="text-align: center; margin: 10px 0;"></div>
 
+    <div id="subjects"></div>
+    <button onclick="openHistoryModal()">View History</button>
 
-
-            </tr>
-            <tr>
-    <td id="label2">বাংলা দ্বিতীয় পত্র</td>
-    <td>
-        <div id="timer2" class="timer-display">
-            <span id="hours2">00</span>h 
-            <span id="minutes2">00</span>m 
-            <span id="seconds2">00</span>s
-        </div>
-        <button class="timer-button" id="startButton2" onclick="showPopup('timer2')">Start</button>
-        <button class="timer-button" id="pauseButton2" onclick="pauseTimer('timer2')">Pause</button>
-    </td>
-    <td>
-        <input type="text" id="comment2" placeholder="মন্তব্য দিন" oninput="saveComment('comment2')">
-    </td>
-    <td><input type="checkbox" id="subject2" onchange="saveProgress(this, 'subject2')"></td>
-</tr>
-<tr>
-    <td id="label3">ইংরেজি প্রথম পত্র</td>
-    <td>
-        <div id="timer3" class="timer-display">
-            <span id="hours3">00</span>h 
-            <span id="minutes3">00</span>m 
-            <span id="seconds3">00</span>s
-        </div>
-        <button class="timer-button" id="startButton3" onclick="showPopup('timer3')">Start</button>
-        <button class="timer-button" id="pauseButton3" onclick="pauseTimer('timer3')">Pause</button>
-    </td>
-    <td>
-        <input type="text" id="comment3" placeholder="মন্তব্য দিন" oninput="saveComment('comment3')">
-    </td>
-    <td><input type="checkbox" id="subject3" onchange="saveProgress(this, 'subject3')"></td>
-</tr>
-<tr>
-    <td id="label4">ইংরেজি দ্বিতীয় পত্র</td>
-    <td>
-        <div id="timer4" class="timer-display">
-            <span id="hours4">00</span>h 
-            <span id="minutes4">00</span>m 
-            <span id="seconds4">00</span>s
-        </div>
-        <button class="timer-button" id="startButton4" onclick="showPopup('timer4')">Start</button>
-        <button class="timer-button" id="pauseButton4" onclick="pauseTimer('timer4')">Pause</button>
-    </td>
-    <td>
-        <input type="text" id="comment4" placeholder="মন্তব্য দিন" oninput="saveComment('comment4')">
-    </td>
-    <td><input type="checkbox" id="subject4" onchange="saveProgress(this, 'subject4')"></td>
-</tr>
-<tr>
-    <td id="label5">গণিত</td>
-    <td>
-        <div id="timer5" class="timer-display">
-            <span id="hours5">00</span>h 
-            <span id="minutes5">00</span>m 
-            <span id="seconds5">00</span>s
-        </div>
-        <button class="timer-button" id="startButton5" onclick="showPopup('timer5')">Start</button>
-        <button class="timer-button" id="pauseButton5" onclick="pauseTimer('timer5')">Pause</button>
-    </td>
-    <td>
-        <input type="text" id="comment5" placeholder="মন্তব্য দিন" oninput="saveComment('comment5')">
-    </td>
-    <td><input type="checkbox" id="subject5" onchange="saveProgress(this, 'subject5')"></td>
-</tr>
-<tr>
-    <td id="label6">উচ্চতর গণিত</td>
-    <td>
-        <div id="timer6" class="timer-display">
-            <span id="hours6">00</span>h 
-            <span id="minutes6">00</span>m 
-            <span id="seconds6">00</span>s
-        </div>
-        <button class="timer-button" id="startButton6" onclick="showPopup('timer6')">Start</button>
-        <button class="timer-button" id="pauseButton6" onclick="pauseTimer('timer6')">Pause</button>
-    </td>
-    <td>
-        <input type="text" id="comment6" placeholder="মন্তব্য দিন" oninput="saveComment('comment6')">
-    </td>
-    <td><input type="checkbox" id="subject6" onchange="saveProgress(this, 'subject6')"></td>
-</tr>
-<tr>
-    <td id="label7">পদার্থ বিজ্ঞান</td>
-    <td>
-        <div id="timer7" class="timer-display">
-            <span id="hours7">00</span>h 
-            <span id="minutes7">00</span>m 
-            <span id="seconds7">00</span>s
-        </div>
-        <button class="timer-button" id="startButton7" onclick="showPopup('timer7')">Start</button>
-        <button class="timer-button" id="pauseButton7" onclick="pauseTimer('timer7')">Pause</button>
-    </td>
-    <td>
-        <input type="text" id="comment7" placeholder="মন্তব্য দিন" oninput="saveComment('comment7')">
-    </td>
-    <td><input type="checkbox" id="subject7" onchange="saveProgress(this, 'subject7')"></td>
-</tr>
-
-<tr>
-    <td id="label8">রসায়ন</td>
-    <td>
-        <div id="timer8" class="timer-display">
-            <span id="hours8">00</span>h 
-            <span id="minutes8">00</span>m 
-            <span id="seconds8">00</span>s
-        </div>
-        <button class="timer-button" id="startButton8" onclick="showPopup('timer8')">Start</button>
-        <button class="timer-button" id="pauseButton8" onclick="pauseTimer('timer8')">Pause</button>
-    </td>
-    <td>
-        <input type="text" id="comment8" placeholder="মন্তব্য দিন" oninput="saveComment('comment8')">
-    </td>
-    <td><input type="checkbox" id="subject8" onchange="saveProgress(this, 'subject8')"></td>
-</tr>
-
-<tr>
-    <td id="label9">জীববিজ্ঞান</td>
-    <td>
-        <div id="timer9" class="timer-display">
-            <span id="hours9">00</span>h 
-            <span id="minutes9">00</span>m 
-            <span id="seconds9">00</span>s
-        </div>
-        <button class="timer-button" id="startButton9" onclick="showPopup('timer9')">Start</button>
-        <button class="timer-button" id="pauseButton9" onclick="pauseTimer('timer9')">Pause</button>
-    </td>
-    <td>
-        <input type="text" id="comment9" placeholder="মন্তব্য দিন" oninput="saveComment('comment9')">
-    </td>
-    <td><input type="checkbox" id="subject9" onchange="saveProgress(this, 'subject9')"></td>
-</tr>
-
-<tr>
-    <td id="label10">সমাজ</td>
-    <td>
-        <div id="timer10" class="timer-display">
-            <span id="hours10">00</span>h 
-            <span id="minutes10">00</span>m 
-            <span id="seconds10">00</span>s
-        </div>
-        <button class="timer-button" id="startButton10" onclick="showPopup('timer10')">Start</button>
-        <button class="timer-button" id="pauseButton10" onclick="pauseTimer('timer10')">Pause</button>
-    </td>
-    <td>
-        <input type="text" id="comment10" placeholder="মন্তব্য দিন" oninput="saveComment('comment10')">
-    </td>
-    <td><input type="checkbox" id="subject10" onchange="saveProgress(this, 'subject10')"></td>
-</tr>
-
-<tr>
-    <td id="label11">ইসলাম</td>
-    <td>
-        <div id="timer11" class="timer-display">
-            <span id="hours11">00</span>h 
-            <span id="minutes11">00</span>m 
-            <span id="seconds11">00</span>s
-        </div>
-        <button class="timer-button" id="startButton11" onclick="showPopup('timer11')">Start</button>
-        <button class="timer-button" id="pauseButton11" onclick="pauseTimer('timer11')">Pause</button>
-    </td>
-    <td>
-        <input type="text" id="comment11" placeholder="মন্তব্য দিন" oninput="saveComment('comment11')">
-    </td>
-    <td><input type="checkbox" id="subject11" onchange="saveProgress(this, 'subject11')"></td>
-</tr>
-
-<tr>
-    <td id="label12">তথ্য ও যোগাযোগ প্রযুক্তি</td>
-    <td>
-        <div id="timer12" class="timer-display">
-            <span id="hours12">00</span>h 
-            <span id="minutes12">00</span>m 
-            <span id="seconds12">00</span>s
-        </div>
-        <button class="timer-button" id="startButton12" onclick="showPopup('timer12')">Start</button>
-        <button class="timer-button" id="pauseButton12" onclick="pauseTimer('timer12')">Pause</button>
-    </td>
-    <td>
-        <input type="text" id="comment12" placeholder="মন্তব্য দিন" oninput="saveComment('comment12')">
-    </td>
-    <td><input type="checkbox" id="subject12" onchange="saveProgress(this, 'subject12')"></td>
-</tr>
-
-<!-- Add additional rows for the remaining subjects in the same format -->
-
-            <!-- Add more rows as needed -->
-        </tbody>
-    </table>
-    
-    <!-- Timer setup popup -->
-    <div id="popup" class="popup-container" style="display: none;">
-        <h3>Set Timer Duration</h3>
-        <label>
-            Hours:
-            <select id="setHours" class="dropdown"></select>
-        </label>
-        <label>
-            Minutes:
-            <select id="setMinutes" class="dropdown"></select>
-        </label>
-        <div class="popup-buttons">
-            <button class="popup-button"  onclick="setTimer()">Set Timer</button>
-            <button class="popup-button cancel" onclick="closePopup()">Cancel</button>
+    <!-- History Modal -->
+    <div id="history-modal" class="modal">
+        <div class="modal-content">
+            <h2>History</h2>
+            <ul id="history-list"></ul>
+            <button class="close-button" onclick="closeHistoryModal()">Close</button>
         </div>
     </div>
-    
     <style>
-        .timer-display {
-            font-size: 20px;
-            font-family: Arial, sans-serif;
-            color: #333;
-        }
-    
-        .timer-button {
-            background-color: #4CAF50;
-            color: rgb(255, 255, 255);
-            border: none;
-            padding: 8px 16px;
-            margin: 5px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-    
-        .timer-button:hover {
-            background-color: #45a049;
-        }
-    
-        .popup-container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #f9f9f9;
-    border: 1px solid #ccc;
+       
+       #scheduleForm {
+    background-color: #fff;
     padding: 20px;
-    margin: 10 auto;
-    max-width: 500px;
-    z-index: 1000;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-    font-family: Arial, sans-serif;
-    text-align: left; /* Align everything to the left */
+    margin: 20px auto;
+    width: 300px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-label {
+#scheduleForm label {
+    font-size: 16px;
+    margin-bottom: 5px;
     display: block;
-    margin-bottom: 10px;
 }
 
-.popup-buttons {
-    margin-top: 20px;
-    text-align: left; /* Align buttons to the left */
+#scheduleForm select,
+#scheduleForm input[type="time"] {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0 15px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }
 
-.popup-button {
+#scheduleForm button {
+    width: 100%;
+    padding: 10px;
     background-color: #4CAF50;
-    color: white;
+    color: #fff;
+    font-size: 16px;
     border: none;
-    padding: 10px 20px;
-    margin: 5px;
+    border-radius: 5px;
     cursor: pointer;
+}
+
+#scheduleForm button:hover {
+    background-color: #45a049;
+}
+
+/* Styling for schedule manager */
+#scheduleManager {
+    background-color: #fff;
+    padding: 20px;
+    margin: 20px auto;
+    width: 320px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#scheduleManager h2 {
+    font-size: 24px;
+    color: #333;
+    text-align: center;
+}
+
+#scheduleList {
+    list-style-type: none;
+    padding: 0;
+}
+
+#scheduleList li {
+    background-color: #ffd6d6;
+    padding: 10px;
+    margin: 5px 0;
     border-radius: 5px;
     font-size: 16px;
-    transition: transform 0.2s ease, background-color 0.3s ease; /* Smooth hover effect */
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.322)  ;
 }
 
-.popup-button:hover {
-    background-color: #45a049; /* Slightly darker green */
-    transform: scale(1.05); /* Button grows slightly when hovered */
+#scheduleList li span {
+    font-weight: bold;
 }
 
-.popup-button.cancel {
-    background-color: #f44336; /* Red color for cancel button */
-}
-
-.popup-button.cancel:hover {
-    background-color: #e53935; /* Slightly darker red on hover */
-}
-
-.dropdown {
-    text-align: left; /* Left align the dropdown menu */
-    padding: 5px;
+#resetAll {
     width: 100%;
-    max-height: 150px; /* Limit the height of the dropdown */
-    overflow-y: auto; /* Enable scroll if content overflows */
+    padding: 10px;
+    background-color: #e74c3c;
+    color: #fff;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
 }
 
+#resetAll:hover {
+    background-color: #c0392b;
+}
 
-    
-        .popup-container h3 {
-            margin-bottom: 15px;
-            font-size: 18px;
-            color: #444;
-        }
-    
-        .dropdown {
-            width: 80px;
-            height: 40px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 5px;
-            font-size: 14px;
-            font-family: Arial, sans-serif;
-            overflow-y: auto;
-        }
-    
-        .popup-buttons {
-            margin-top: 20px;
-        }
-    
-        .popup-button {
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-    
-        .popup-button:hover {
-            background-color: #0056b3;
-        }
-    
-        .popup-button.cancel {
-            background-color: #f44336;
-        }
-    
-        .popup-button.cancel:hover {
-            background-color: #d32f2f;
-        }
+/* Hidden elements */
+.hidden {
+    display: none;
+}
     </style>
-    
-
-
-    <!-- timer -->
-    <script>
-        // Dynamically populate dropdown options for hours and minutes
-function populateTimeOptions() {
-    const hoursSelect = document.getElementById('setHours');
-    const minutesSelect = document.getElementById('setMinutes');
-
-    // Populate hours (0 to 5)
-    for (let i = 0; i <= 5; i++) {
-        const option = document.createElement('option');
-        option.value = i;
-        option.textContent = i.toString().padStart(2, '0');
-        hoursSelect.appendChild(option);
-    }
-
-    // Populate minutes (0 to 59)
-    for (let i = 0; i < 60; i++) {
-        const option = document.createElement('option');
-        option.value = i;
-        option.textContent = i.toString().padStart(2, '0');
-        minutesSelect.appendChild(option);
-    }
-}
-
-const timers = {}; // Track timers
-let currentTimerId = null;
-
-function showPopup(timerId) {
-    currentTimerId = timerId;
-    document.getElementById('popup').style.display = 'block';
-}
-
-function closePopup() {
-    document.getElementById('popup').style.display = 'none';
-}
-
-function setTimer() {
-    const hours = parseInt(document.getElementById('setHours').value);
-    const minutes = parseInt(document.getElementById('setMinutes').value);
-    const totalSeconds = hours * 3600 + minutes * 60;
-
-    if (!timers[currentTimerId]) {
-        timers[currentTimerId] = { time: totalSeconds, interval: null, originalTime: totalSeconds, elapsedTime: 0 };
-    } else {
-        timers[currentTimerId].time = totalSeconds;
-        timers[currentTimerId].originalTime = totalSeconds;
-        timers[currentTimerId].elapsedTime = 0;
-    }
-
-    updateTimerDisplay(currentTimerId);
-    startTimer(currentTimerId);
-    closePopup();
-}
-
-function startTimer(id) {
-    if (!timers[id]) return;
-
-    if (!timers[id].interval) {
-        timers[id].interval = setInterval(() => {
-            if (timers[id].time > 0) {
-                timers[id].time--;
-                timers[id].elapsedTime++;
-                updateTimerDisplay(id);
-            } else {
-                clearInterval(timers[id].interval);
-                timers[id].interval = null;
-                triggerAlarm(`Timer ${id} has ended!`);
-                showOriginalTime(id);
-                disableButtons(id);
-            }
-        }, 1000);
-    }
-}
-
-function pauseTimer(id) {
-    if (timers[id] && timers[id].interval) {
-        clearInterval(timers[id].interval);
-        timers[id].interval = null;
-    }
-}
-
-function updateTimerDisplay(id) {
-    const hours = Math.floor(timers[id].time / 3600);
-    const minutes = Math.floor((timers[id].time % 3600) / 60);
-    const seconds = timers[id].time % 60;
-
-    document.getElementById(`hours${id.slice(-1)}`).innerText = hours.toString().padStart(2, '0');
-    document.getElementById(`minutes${id.slice(-1)}`).innerText = minutes.toString().padStart(2, '0');
-    document.getElementById(`seconds${id.slice(-1)}`).innerText = seconds.toString().padStart(2, '0');
-}
-
-function triggerAlarm(message) {
-    // Notify user with a browser notification
-    if ('Notification' in window && Notification.permission === 'granted') {
-        new Notification(message);
-    } else if ('Notification' in window && Notification.permission !== 'denied') {
-        Notification.requestPermission().then(permission => {
-            if (permission === 'granted') {
-                new Notification(message);
-            }
-        });
-    }
-
-    // Vibrate the device if supported
-    if ('vibrate' in navigator) {
-        navigator.vibrate([500, 300, 500, 300, 500]); // Vibrate pattern
-    }
-
-    // Play a simple alert using the Web Audio API
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const oscillator = audioCtx.createOscillator();
-    oscillator.type = 'sine';
-    oscillator.frequency.setValueAtTime(440, audioCtx.currentTime); // A4 note
-    oscillator.connect(audioCtx.destination);
-    oscillator.start();
-    setTimeout(() => oscillator.stop(), 3000); // Stop after 3 seconds
-}
-
-function showOriginalTime(id) {
-    const originalHours = Math.floor(timers[id].originalTime / 3600);
-    const originalMinutes = Math.floor((timers[id].originalTime % 3600) / 60);
-
-    const timerDiv = document.getElementById(id);
-    if (timerDiv) {
-        const existingOriginalTimeDiv = timerDiv.parentNode.querySelector('.original-time-display');
-        if (!existingOriginalTimeDiv) {
-            const originalTimeDiv = document.createElement('div');
-            originalTimeDiv.classList.add('original-time-display');
-            originalTimeDiv.textContent = `পড়া হয়েছে: ${originalHours.toString().padStart(2, '0')}h ${originalMinutes.toString().padStart(2, '0')}m`;
-            timerDiv.parentNode.appendChild(originalTimeDiv);
-
-            localStorage.setItem(`${id}-originalTime`, originalTimeDiv.textContent);
-            localStorage.setItem(`${id}-completed`, true);
-        }
-    }
-}
-
-function disableButtons(id) {
-    const row = document.getElementById(id)?.parentNode?.parentNode;
-    if (row) {
-        const buttons = row.querySelectorAll('.timer-button');
-
-        buttons.forEach((button) => {
-            button.disabled = true;
-            button.style.backgroundColor = '#ccc';
-            button.style.cursor = 'not-allowed';
-        });
-
-        localStorage.setItem(`${id}-disabled`, true);
-
-        showOriginalTime(id);
-
-        const timerDiv = document.getElementById(id);
-        if (timerDiv) {
-            timerDiv.remove();
-        }
-    }
-}
-
-function restoreDisabledButtons() {
-    Object.keys(localStorage).forEach((key) => {
-        if (key.endsWith('-disabled') && localStorage.getItem(key) === 'true') {
-            const id = key.replace('-disabled', '');
-            const row = document.getElementById(id)?.parentNode?.parentNode;
-
-            if (row) {
-                const buttons = row.querySelectorAll('.timer-button');
-                buttons.forEach((button) => {
-                    button.disabled = true;
-                    button.style.backgroundColor = '#ccc';
-                    button.style.cursor = 'not-allowed';
-                });
-
-                const timerDiv = document.getElementById(id);
-                if (timerDiv) {
-                    const originalTime = localStorage.getItem(`${id}-originalTime`);
-                    if (originalTime) {
-                        const originalTimeDiv = document.createElement('div');
-                        originalTimeDiv.classList.add('original-time-display');
-                        originalTimeDiv.textContent = originalTime;
-                        timerDiv.parentNode.appendChild(originalTimeDiv);
-                    }
-
-                    if (localStorage.getItem(`${id}-completed`) === 'true') {
-                        timerDiv.remove();
-                    }
-                }
-            }
-        }
-    });
-}
-
-window.onload = () => {
-    populateTimeOptions();
-    restoreDisabledButtons();
-
-    if ('Notification' in window && Notification.permission !== 'granted') {
-        Notification.requestPermission();
-    }
-};
-
-      </script>
-        
-    
-    
-
-
-    
-    <!-- timer end -->
-
-
-    <div class="history">
-        <button class="history-button" onclick="openHistoryModal()">ইতিহাস দেখুন</button>
-    </div>
-
-    <!-- Modal -->
-    <div id="historyModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeHistoryModal()">×</span>
-            <h2>ইতিহাস দেখুন</h2>
-            <select id="historyDates" class="date-select">
-                <option value="">তারিখ বাছাই করুন</option>
-            </select>
-            <br>
-            <button class="submit-button" onclick="showSelectedHistory()">দেখুন</button>
-            <p id="historyResult"></p>
-        </div>
-    </div>
-
-    <script>
-        // তারিখ আপডেট করা
-        function updateDate() {
-            const dateElement = document.getElementById('currentDate');
-            const now = new Date();
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            dateElement.textContent = now.toLocaleDateString('bn-BD', options);
-        }
-        updateDate();
-    
-        // পড়ার প্রগ্রেস সেভ করা
-        function saveProgress(checkbox, id) {
-            const isChecked = checkbox.checked;
-            const now = new Date();
-            const dateKey = now.toISOString().split('T')[0];
-            const completedSubjects = JSON.parse(localStorage.getItem(dateKey) || '[]');
-    
-            if (isChecked) {
-                if (!completedSubjects.includes(id)) completedSubjects.push(id);
-            } else {
-                const index = completedSubjects.indexOf(id);
-                if (index > -1) completedSubjects.splice(index, 1);
-            }
-    
-            localStorage.setItem(dateKey, JSON.stringify(completedSubjects));
-        }
-    
-        // আগের প্রগ্রেস লোড করা
-        function loadProgress() {
-            const now = new Date();
-            const dateKey = now.toISOString().split('T')[0];
-            const completedSubjects = JSON.parse(localStorage.getItem(dateKey) || '[]');
-    
-            completedSubjects.forEach(id => {
-                const checkbox = document.getElementById(id);
-                if (checkbox) checkbox.checked = true;
-            });
-    
-            // ইনপুট ফিল্ডের ডাটা লোড করা
-            const inputs = document.querySelectorAll('input[type="text"]');
-            inputs.forEach(input => {
-                const savedValue = localStorage.getItem(input.id);
-                if (savedValue) {
-                    input.value = savedValue;
-                }
-            });
-        }
-    
-        // মধ্যরাতে প্রগ্রেস রিসেট করা
-        function resetProgressAtMidnight() {
-            const now = new Date();
-            const msUntilMidnight =
-                new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).getTime() - now.getTime();
-    
-            setTimeout(() => {
-                localStorage.clear();
-                location.reload();
-            }, msUntilMidnight);
-        }
-    
-        // ইনপুট ফিল্ড সেভ করা
-        function saveComment(inputId) {
-            const comment = document.getElementById(inputId).value;
-            localStorage.setItem(inputId, comment);
-        }
-    
-        // ইতিহাস দেখার জন্য মডাল ওপেন করা
-        function openHistoryModal() {
-            const modal = document.getElementById('historyModal');
-            const historyDates = document.getElementById('historyDates');
-            modal.style.display = 'block';
-            historyDates.innerHTML = '<option value="">তারিখ বাছাই করুন</option>';
-    
-            // Filter only keys from the last 4 months
-            const now = new Date();
-            const fourMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 3, now.getDate());
-            const dateKeys = Object.keys(localStorage)
-                .filter(key => {
-                    if (/^\d{4}-\d{2}-\d{2}$/.test(key)) {
-                        const dateKey = new Date(key);
-                        return dateKey >= fourMonthsAgo && dateKey <= now;
-                    }
-                    return false;
-                });
-    
-            dateKeys.sort(); // Optional: Sort dates for better readability
-    
-            dateKeys.forEach(dateKey => {
-                const option = document.createElement('option');
-                option.value = dateKey;
-                option.textContent = dateKey;
-                historyDates.appendChild(option);
-            });
-    
-            // Show message if no valid history exists
-            if (dateKeys.length === 0) {
-                const historyResult = document.getElementById('historyResult');
-                historyResult.textContent = 'ইতিহাসে কোনো তথ্য নেই।';
-            }
-        }
-    
-        // মডাল ক্লোজ করা
-        function closeHistoryModal() {
-            document.getElementById('historyModal').style.display = 'none';
-        }
-    
-        // নির্বাচিত তারিখের ইতিহাস দেখানো
-        function showSelectedHistory() {
-            const historyDates = document.getElementById('historyDates');
-            const dateKey = historyDates.value;
-            const historyResult = document.getElementById('historyResult');
-    
-            if (dateKey) {
-                const completedSubjects = JSON.parse(localStorage.getItem(dateKey) || '[]');
-                const subjectDetails = completedSubjects.map(id => {
-                    const row = document.querySelector(`#${id}`).closest('tr');
-                    const subjectName = row ? row.querySelector('td').textContent : 'নাম পাওয়া যায়নি';
-                    const inputId = row.querySelector('input[type="text"]').id;
-                    const inputValue = localStorage.getItem(inputId) || 'কোনো মন্তব্য নেই';
-                    return `${subjectName} - ${inputValue}`;
-                });
-    
-                historyResult.textContent = `${dateKey} তারিখে সম্পন্ন হয়েছে: ${subjectDetails.join(', ')}।`;
-            } else {
-                historyResult.textContent = 'অনুগ্রহ করে একটি তারিখ বাছাই করুন।';
-            }
-        }
-        
-        function openHistoryModal() {
-    const modal = document.getElementById('historyModal');
-    const historyDates = document.getElementById('historyDates');
-    modal.style.display = 'block';
-    historyDates.innerHTML = '<option value="">তারিখ বাছাই করুন</option>';
-
-    // Filter only keys from the last 4 months
-    const now = new Date();
-    const fourMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 3, now.getDate());
-    const dateKeys = Object.keys(localStorage)
-        .filter(key => {
-            if (/^\d{4}-\d{2}-\d{2}$/.test(key)) { // Check if key matches YYYY-MM-DD format
-                const dateKey = new Date(key);
-                return dateKey >= fourMonthsAgo && dateKey <= now;
-            }
-            return false;
-        });
-
-    dateKeys.sort(); // Optional: Sort dates for better readability
-
-    dateKeys.forEach(dateKey => {
-        const option = document.createElement('option');
-        option.value = dateKey;
-        option.textContent = dateKey;
-        historyDates.appendChild(option);
-    });
-
-    // Show message if no valid history exists
-    if (dateKeys.length === 0) {
-        const historyResult = document.getElementById('historyResult');
-        historyResult.textContent = 'ইতিহাসে কোনো তথ্য নেই।';
-    }
-}
-
-    
-        // স্ক্রিপ্ট চালানো
-        loadProgress();
-        resetProgressAtMidnight();
-    </script>
-    
-
+ <h1>Study Scheduler</h1>
+ <form id="scheduleForm">
+     <label for="subject">Subject:</label>
+     <select id="subject">
+         <option>Bangla First Paper</option>
+         <option>Bangla Second Paper</option>
+         <option>English First Paper</option>
+         <option>English Second Paper</option>
+         <option>Physics</option>
+         <option>Chemistry</option>
+         <option>Biology</option>
+         <option>Islam</option>
+         <option>Math</option>
+         <option>Higher Math</option>
+         <option>ICT</option>
+         <option>BGS</option>
+     </select>
+     <br><br>
+     <label for="time">Time (12-hour format):</label>
+     <input type="time" id="time" required>
+     <br><br>
+     <button type="submit">Set Schedule</button>
+ </form>
  
+ <div id="scheduleManager" class="hidden">
+     <h2>Schedule Manager</h2>
+     <ul id="scheduleList"></ul>
+     <button id="resetAll"><i class="fas fa-trash-alt"></i> Reset All</button>
+ </div>
 
+ <audio id="notificationSound" src="notification.mp3" class="hidden"></audio>
+
+
+    <script src="script.js"></script>
 </body>
-    
-    </html>
+</html>
