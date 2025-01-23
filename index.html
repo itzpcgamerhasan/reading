@@ -3,29 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Push Notifications Setup</title>
-  <link rel="manifest" href="./manifest.json"> <!-- Correct manifest file reference -->
+  <title>Document</title>
 </head>
 <body>
-  <h1>Firebase Push Notifications</h1>
-  <p>Ensure you allow notifications for this site.</p>
-
- 
-
-  <!-- Register Service Worker -->
-  <script>
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker
-          .register("./firebase-messaging-sw.js") // Correct path to the service worker
-          .then((registration) => {
-            console.log("ServiceWorker registration successful with scope: ", registration.scope);
-          })
-          .catch((error) => {
-            console.error("ServiceWorker registration failed: ", error);
-          });
-      });
-    }
+  <h1>hasan</h1>
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyAKx_SDYuKMMxumQ0-LurDKFuJealqdA7U",
+      authDomain: "dppushn-otification.firebaseapp.com",
+      projectId: "dppushn-otification",
+      storageBucket: "dppushn-otification.firebasestorage.app",
+      messagingSenderId: "656610319409",
+      appId: "1:656610319409:web:7519cbd4de540f130f0910",
+      measurementId: "G-GE6TR9Q6V4"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
   </script>
 </body>
 </html>
