@@ -1,28 +1,28 @@
-importScripts('https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js');
-importScripts('https://www.gstatic.com/firebasejs/11.2.0/firebase-messaging.js');
+// Import Firebase scripts
+importScripts("https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js");
+importScripts("https://www.gstatic.com/firebasejs/11.2.0/firebase-messaging.js");
 
-// Firebase configuration (same as in your main code)
-const firebaseConfig = {
+// Initialize Firebase in the Service Worker
+firebase.initializeApp({
   apiKey: "AIzaSyAKx_SDYuKMMxumQ0-LurDKFuJealqdA7U",
   authDomain: "dppushn-otification.firebaseapp.com",
   projectId: "dppushn-otification",
   storageBucket: "dppushn-otification.firebasestorage.app",
   messagingSenderId: "656610319409",
-  appId: "1:656610319409:web:7519cbd4de540f130f0910",
-  measurementId: "G-GE6TR9Q6V4"
-};
+  appId: "1:656610319409:web:7519cbd4de540f130f0910"
+});
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-
-// Initialize Messaging
+// Retrieve an instance of Firebase Messaging
 const messaging = firebase.messaging();
 
-// Handle background messages
+// Background message handler
 messaging.onBackgroundMessage((payload) => {
-  console.log('Background message received: ', payload);
-  self.registration.showNotification(payload.notification.title, {
+  console.log("Received background message: ", payload);
+  const notificationTitle = payload.notification.title;
+  const notificationOptions = {
     body: payload.notification.body,
-    icon: payload.notification.icon,
-  });
+    icon: "/icon512_rounded.png"
+  };
+
+  self.registration.showNotification(notificationTitle, notificationOptions);
 });
