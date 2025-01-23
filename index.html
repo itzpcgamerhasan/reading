@@ -1,11 +1,13 @@
-ko<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>Reading Progress</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Progress Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  
+   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="shortcut icon" href="icon512_rounded.png" type="image/x-icon">
     <link rel="manifest" href="manifest.json">
@@ -28,12 +30,16 @@ ko<!DOCTYPE html>
 
     <style>
        body {
-    font-family:"Roboto Condensed", serif;
+    font-family:"Roboto Condensed", sans-serif,'Hind Siliguri', sans-serif;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background-color: #f4f4f9;
-    color: #333;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, rgba(238, 29, 229, 0.1), rgba(52, 29, 229, 0.1));
+  color: #333;
+  text-align: center;
+  overflow-x: hidden;
 } 
 
         h1 {
@@ -304,8 +310,8 @@ button#back-btn {
     </style>
 </head>
 <body>
-
-    <h1>Reading Progress</h1>
+  
+  <h1>Reading Progress</h1>
     <div id="current-date" style="text-align: center; margin: 10px 0;"></div>
 
     <div id="subjects"></div>
@@ -435,7 +441,7 @@ button#back-btn {
          <option>BGS</option>
      </select>
      <br><br>
-     <label for="time">Time (12-hour format):</label>
+     <label for="time">Time:</label>
      <input type="time" id="time" required>
      <br><br>
      <button type="submit">Set Schedule</button>
@@ -449,7 +455,36 @@ button#back-btn {
 
  <audio id="notificationSound" src="notification.mp3" class="hidden"></audio>
 
+  
+  
+  <div class="mah-background-animation"></div>
+  <h1>Study Progress Tracker</h1>
+  <button id="mah-addChapterButton">Add Completed Chapter/Topic</button>
+  <button id="mah-viewProgressButton">View Study Progress</button>
 
-    <script src="script.js"></script>
+  <!-- Add Completed Chapter Modal -->
+  <div id="mah-addChapterModal" class="mah-modal mah-hidden">
+    <div class="mah-modal-content">
+      <div class="mah-modal-background-animation"></div>
+      <span class="close" id="mah-closeAddChapter">&times;</span>
+      <h2>Select subject and add completed chapters or topics</h2>
+      <div id="mah-subjectList" class="mah-subject-list"></div>
+      <div class="mah-modal-footer">
+        <button id="mah-saveButton">save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Progress Modal -->
+  <div id="mah-viewProgressModal" class="mah-modal mah-hidden">
+    <div class="mah-modal-content">
+      <div class="mah-modal-background-animation"></div>
+      <span class="mah-close" id="mah-closeViewProgress">&times;</span>
+      <h2>Reading Progress</h2>
+      <ul id="mah-progressList"></ul>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
