@@ -10,11 +10,11 @@
   <button id="subscribe">Subscribe for Notifications</button>
 
   <script type="module">
-    // Import Firebase SDKs
+    // Import the functions you need from the SDKs
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
     import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-messaging.js";
 
-    // Firebase configuration
+    // Your web app's Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyAKx_SDYuKMMxumQ0-LurDKFuJealqdA7U",
       authDomain: "dppushn-otification.firebaseapp.com",
@@ -29,42 +29,41 @@
     const app = initializeApp(firebaseConfig);
     const messaging = getMessaging(app);
 
-    // VAPID key
+    // Request permission and get the token
     const vapidKey = "BP6cz64LCNNDVgiQZKKPWBu2GFde66HaYQPPlo-jX9IiEOtWZFrg7Ks-FM6dwlqs_vJ8f-oR-djfT1PmTPy-tKI";
 
-    // Subscribe to notifications
     document.getElementById('subscribe').addEventListener('click', async () => {
       try {
         const token = await getToken(messaging, { vapidKey });
         if (token) {
           console.log('Token generated:', token);
           alert('You are subscribed for notifications!');
-          // Save the token to your server for sending notifications
+          // Send the token to your server for later use
         } else {
-          console.warn('No token available. Request permission to generate one.');
+          console.error('No registration token available. Request permission to generate one.');
         }
       } catch (error) {
-        console.error('Error during token generation:', error);
+        console.error('An error occurred while retrieving token.', error);
       }
     });
 
-    // Listen for foreground messages
+    // Handle incoming messages
     onMessage(messaging, (payload) => {
-      console.log('Message received:', payload);
-      alert(`Notification: ${payload.notification.title}`);
+      console.log('Message received. ', payload);
+      alert(`Notification received: ${payload.notification.title}`);
     });
   </script>
 
   <script>
-    // Register the service worker
+    // Register Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('firebase-messaging-sw.js')
+        navigator.serviceWorker.register('/firebase-messaging-sw.js')
           .then((registration) => {
-            console.log('Service Worker registered successfully:', registration);
+            console.log('Service Worker registration successful', registration);
           })
           .catch((error) => {
-            console.error('Service Worker registration failed:', error);
+            console.error('Service Worker registration failed', error);
           });
       });
     }
