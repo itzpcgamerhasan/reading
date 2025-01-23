@@ -6,16 +6,15 @@
   <title>Push Notifications Setup</title>
 </head>
 <body>
-  <h1>Firebase Push Notificdationcs</h1>
+  <h1>Firebase Push Notifications</h1>
   <p>Ensure you allow notifications for this site.</p>
 
   <script type="module">
-    // Import the functions you need from the SDKs
+    // Import the functions you need from the Firebase SDKs
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
     import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-messaging.js";
 
-    // Your Firebase configuration object
+    // Firebase configuration object
     const firebaseConfig = {
       apiKey: "AIzaSyAKx_SDYuKMMxumQ0-LurDKFuJealqdA7U",
       authDomain: "dppushn-otification.firebaseapp.com",
@@ -28,28 +27,27 @@
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-
-    // Initialize Firebase Cloud Messaging
     const messaging = getMessaging(app);
 
-    // Request Notification Permissions
+    // Request notification permissions
     Notification.requestPermission()
       .then((permission) => {
         if (permission === "granted") {
           console.log("Notification permission granted.");
 
-          // Get the FCM registration token
+          // Get the FCM token
           getToken(messaging, {
             vapidKey: "BP6cz64LCNNDVgiQZKKPWBu2GFde66HaYQPPlo-jX9IiEOtWZFrg7Ks-FM6dwlqs_vJ8f-oR-djfT1PmTPy-tKI"
-          }).then((currentToken) => {
+          })
+          .then((currentToken) => {
             if (currentToken) {
               console.log("FCM Token:", currentToken);
-              // Save the token to your server for sending notifications later
+              // Send the token to your server to send push notifications
             } else {
               console.warn("No registration token available. Request permission to generate one.");
             }
-          }).catch((err) => {
+          })
+          .catch((err) => {
             console.error("An error occurred while retrieving token: ", err);
           });
         } else {
@@ -63,17 +61,16 @@
     // Listen for incoming messages
     onMessage(messaging, (payload) => {
       console.log("Message received: ", payload);
-      // Show notification or update the UI
-      alert("Notification received: " + payload.notification.title);
+      alert(`Notification received: ${payload.notification.title}`);
     });
   </script>
 
   <!-- Register Service Worker -->
-   <script>
-        if ("serviceWorker" in navigator) {
+  <script>
+    if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
         navigator.serviceWorker
-          .register("firebase-messaging-sw.js")
+          .register("./firebase-messaging-sw.js") // Correct relative path
           .then((registration) => {
             console.log("ServiceWorker registration successful with scope: ", registration.scope);
           })
@@ -82,7 +79,6 @@
           });
       });
     }
-    
-    </script>
+  </script>
 </body>
 </html>
