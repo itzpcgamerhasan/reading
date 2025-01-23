@@ -1,4 +1,4 @@
-const CACHE_NAME = "reading-cache-v2.1"; // নতুন ক্যাশ নাম
+const CACHE_NAME = "reading-cache-v2.12"; // নতুন ক্যাশ নাম
 const urlsToCache = [
   "/reading/",
   "/reading/index.html",
