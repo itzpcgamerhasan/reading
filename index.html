@@ -27,6 +27,64 @@
     }
     
     </script>
+  <script type="module">
+    // Import the functions you need from the SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+    import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-messaging.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAKx_SDYuKMMxumQ0-LurDKFuJealqdA7U",
+      authDomain: "dppushn-otification.firebaseapp.com",
+      projectId: "dppushn-otification",
+      storageBucket: "dppushn-otification.firebasestorage.app",
+      messagingSenderId: "656610319409",
+      appId: "1:656610319409:web:7519cbd4de540f130f0910",
+      measurementId: "G-GE6TR9Q6V4"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const messaging = getMessaging(app);
+
+    // Request permission and get the token
+    const vapidKey = "BP6cz64LCNNDVgiQZKKPWBu2GFde66HaYQPPlo-jX9IiEOtWZFrg7Ks-FM6dwlqs_vJ8f-oR-djfT1PmTPy-tKI";
+
+    document.getElementById('subscribe').addEventListener('click', async () => {
+      try {
+        const token = await getToken(messaging, { vapidKey });
+        if (token) {
+          console.log('Token generated:', token);
+          alert('You are subscribed for notifications!');
+          // Send the token to your server for later use
+        } else {
+          console.error('No registration token available. Request permission to generate one.');
+        }
+      } catch (error) {
+        console.error('An error occurred while retrieving token.', error);
+      }
+    });
+
+    // Handle incoming messages
+    onMessage(messaging, (payload) => {
+      console.log('Message received. ', payload);
+      alert(`Notification received: ${payload.notification.title}`);
+    });
+  </script>
+  <script>
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('firebase-messaging-sw.js')
+          .then((registration) => {
+            console.log('Service Worker registration successful', registration);
+          })
+          .catch((error) => {
+            console.error('Service Worker registration failed', error);
+          });
+      });
+    }
+  </script>
 
     <style>
        body {
