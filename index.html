@@ -6,7 +6,7 @@
   <title>Push Notifications Setup</title>
 </head>
 <body>
-  <h1>Firebase Push Notificationcs</h1>
+  <h1>Firebase Push Notificdationcs</h1>
   <p>Ensure you allow notifications for this site.</p>
 
   <script type="module">
@@ -69,16 +69,20 @@
   </script>
 
   <!-- Register Service Worker -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('firebase-messaging-sw.js')
-        .then((registration) => {
-          console.log("Service Worker registered with scope:", registration.scope);
-        })
-        .catch((err) => {
-          console.error("Service Worker registration failed:", err);
-        });
+   <script>
+        if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker
+          .register("firebase-messaging-sw.js")
+          .then((registration) => {
+            console.log("ServiceWorker registration successful with scope: ", registration.scope);
+          })
+          .catch((error) => {
+            console.error("ServiceWorker registration failed: ", error);
+          });
+      });
     }
-  </script>
+    
+    </script>
 </body>
 </html>
