@@ -1,17 +1,106 @@
 const subjects = [
-    "Bangla First Paper",
-    "Bangla Second Paper",
-    "English First Paper",
-    "English Second Paper",
-    "Physics",
-    "Chemistry",
-    "Biology",
-    "Islam",
-    "Math",
-    "Higher Math",
-    "ICT",
-    "BGS",
+  "Bangla First Paper",
+  "Bangla Second Paper",
+  "English First Paper",
+  "English Second Paper",
+  "Physics",
+  "Islam",
+  "Math",
+  "Higher Math",
+  "ICT",
+  "BGS",
+  "Biology",
+  "Chemistry"
 ];
+
+// Buttons and Modals
+const mahAddChapterButton = document.getElementById('mah-addChapterButton');
+const mahViewProgressButton = document.getElementById('mah-viewProgressButton');
+const mahAddChapterModal = document.getElementById('mah-addChapterModal');
+const mahViewProgressModal = document.getElementById('mah-viewProgressModal');
+const mahCloseAddChapter = document.getElementById('mah-closeAddChapter');
+const mahCloseViewProgress = document.getElementById('mah-closeViewProgress');
+const mahSubjectList = document.getElementById('mah-subjectList');
+const mahSaveButton = document.getElementById('mah-saveButton');
+const mahProgressList = document.getElementById('mah-progressList');
+
+// Initialize subject list
+function initializeSubjectList() {
+  mahSubjectList.innerHTML = '';
+  subjects.forEach(subject => {
+    const div = document.createElement('div');
+    div.className = 'mah-subject-item';
+
+    const label = document.createElement('label');
+    label.textContent = subject;
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = 'Completed Topic';
+    input.dataset.subject = subject;
+
+    div.appendChild(label);
+    div.appendChild(input);
+    mahSubjectList.appendChild(div);
+  });
+}
+
+// Save completed topics to localStorage
+function saveCompletedTopics() {
+  const inputs = document.querySelectorAll('#mah-subjectList input');
+  const completedTopics = JSON.parse(localStorage.getItem('mah-studyProgress')) || {};
+
+  inputs.forEach(input => {
+    const subject = input.dataset.subject;
+    const topic = input.value.trim();
+    if (topic) {
+      if (!completedTopics[subject]) {
+        completedTopics[subject] = [];
+      }
+      completedTopics[subject].push(topic);
+    }
+  });
+
+  localStorage.setItem('mah-studyProgress', JSON.stringify(completedTopics));
+  alert('Progress saved successfully!');
+  mahAddChapterModal.classList.add('mah-hidden');
+}
+
+// View progress from localStorage
+function viewProgress() {
+  const completedTopics = JSON.parse(localStorage.getItem('mah-studyProgress')) || {};
+  mahProgressList.innerHTML = '';
+
+  Object.keys(completedTopics).forEach(subject => {
+    const li = document.createElement('li');
+    li.textContent = `${subject}: ${completedTopics[subject].join(', ')}`;
+    mahProgressList.appendChild(li);
+  });
+
+  mahViewProgressModal.classList.remove('mah-hidden');
+}
+
+// Event Listeners
+mahAddChapterButton.addEventListener('click', () => {
+  initializeSubjectList();
+  mahAddChapterModal.classList.remove('mah-hidden');
+});
+
+mahViewProgressButton.addEventListener('click', () => {
+  viewProgress();
+});
+
+mahCloseAddChapter.addEventListener('click', () => {
+  mahAddChapterModal.classList.add('mah-hidden');
+});
+
+mahCloseViewProgress.addEventListener('click', () => {
+  mahViewProgressModal.classList.add('mah-hidden');
+});
+
+mahSaveButton.addEventListener('click', saveCompletedTopics);
+
+
 
 const progressData = JSON.parse(localStorage.getItem("progressData")) || {};
 const historyData = JSON.parse(localStorage.getItem("historyData")) || [];
@@ -353,4 +442,3 @@ function playNotificationSound() {
     const notificationSound = document.getElementById('notificationSound');
     notificationSound.play();
 }
-
