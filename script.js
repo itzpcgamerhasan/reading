@@ -442,3 +442,5 @@ function playNotificationSound() {
     const notificationSound = document.getElementById('notificationSound');
     notificationSound.play();
 }
+
+<script src="https://www.gstatic.com/firebasejs/9.8.2/firebase-app.js"></script>
