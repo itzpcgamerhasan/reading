@@ -3,512 +3,82 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Study Progress Tracker</title>
-  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  
-   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <link rel="shortcut icon" href="icon512_rounded.png" type="image/x-icon">
-    <link rel="manifest" href="manifest.json">
-    <link rel="serviceWorker" href="sw.js">
-    <script>
-        if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker
-          .register("sw.js")
-          .then((registration) => {
-            console.log("ServiceWorker registration successful with scope: ", registration.scope);
-          })
-          .catch((error) => {
-            console.error("ServiceWorker registration failed: ", error);
-          });
-      });
-    }
-    
-    </script>
-
-    <style>
-       body {
-    font-family:"Roboto Condensed", sans-serif,'Hind Siliguri', sans-serif;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  background: linear-gradient(135deg, rgba(238, 29, 229, 0.1), rgba(52, 29, 229, 0.1));
-  color: #333;
-  text-align: center;
-  overflow-x: hidden;
-} 
-
-        h1 {
-            text-align: center;
-            margin: 20px 0;
-            color: #2c3e50;
-            text-transform: uppercase;
-        }
-
-        #subjects {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 10px;
-            font-family: "Roboto Condensed", serif;
-            text-transform: uppercase;
-        }
-
-        .subject {
-            margin-bottom: 20px;
-            border: 1px solid #3498db;
-            background: #ffacac;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border-left: 5px groove #3498db;
-            transition: 2s ease-in-out;
-        }
-
-        .subject input[type="text"] {
-            max-width: 100%;
-           padding-top: 8px;
-           padding-bottom: 8px;
-            margin-top: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-            font-family: 'Roboto', sans-serif;
-            cursor: pointer;
-        }
-
-        .checkbox-label {
-            font-weight: bold;
-            color: #2c3e50;
-            margin-left: 10px;
-        }
-
-        button {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            background-color: #3498db;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #2980b9;
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            width: 90%;
-            max-width: 500px;
-            text-align: center;
-        }
-
-        .modal-content h2 {
-            margin-top: 0;
-        }
-
-        .modal-content ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .modal-content li {
-            margin-bottom: 10px;
-            padding: 10px;
-            background: #f9f9f9;
-            border-left: 4px solid #3498db;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .close-button {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 10px 20px;
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        .close-button:hover {
-            background-color: #c0392b;
-        }
-        /* Global Styles */
-
-
-/* Date Display */
-#current-date {
-    font-size:17px;
-    font-weight: 500;
-    color: #333;
-    text-align: center;
-    margin: 20px 0;
-}
-
-/* Subject and Progress Styles */
-
-
-.subject {
-    background-color: #fff;
-    margin-bottom: 15px;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition:  0.5s ease-in-out;
-}
-
-.subject:hover {
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    transform: translateY(-5px);
-    scale:0.98;
-    border-left:5px dotted #3498db
-}
-
-.subject h3 {
-    margin: 0;
-    font-size: 1.2em;
-    font-weight: 600;
-    color: #4A90E2;
-}
-
-input[type="text"] {
-    width: 100%;
-    
-    margin-top: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1em;
-}
-
-input[type="checkbox"] {
-    margin-right: 10px;
-    cursor: pointer;
-    margin-left: -10px;
-    width:15px;
-    height: 15px;
-   
-}
-
-.checkbox-label {
-    display: flex;
-    align-items: center;
-    font-size: 1em;
-}
-
-/* History Modal Styles */
-#history-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-}
-
-
-
-button {
-    padding: 10px 20px;
-    border: none;
-    background-color: #077bff;
-    color: #fff;
-    font-size: 1em;
-    cursor: pointer;
-    border-radius: 5px;
-    transition:  0.4s ease;
-}
-
-button:hover {
-    background-color: #002d5a;
-    scale: 1.1;
-}
-
-/* Back Button Styles */
-button#back-btn {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 1em;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    #current-date {
-        font-size: 17px;
-    }
-
-    
-
-    input[type="text"] {
-        font-size: 0.9em;
-       
-    }
-
-    .checkbox-label {
-        font-size: 0.9em;
-    }
-
-    button {
-        font-size: 0.9em;
-    }
-
-   
-}
-
-@media (max-width: 480px) {
-    #current-date {
-        font-size: 1.1em;
-    }
-
-    
-    input[type="text"] {
-        font-size: 0.85em;
-        
-    }
-
-    .checkbox-label {
-        font-size: 0.85em;
-    }
-
-    button {
-        font-size: 0.85em;
-    }
-
-   
-}
-
-    </style>
+  <title>Push Notifications Setup</title>
 </head>
 <body>
-  
-  <h1>Reading Progress</h1>
-    <div id="current-date" style="text-align: center; margin: 10px 0;"></div>
+  <h1>Firebase Push Notifications</h1>
+  <p>Ensure you allow notifications for this site.</p>
 
-    <div id="subjects"></div>
-    <button onclick="openHistoryModal()">View History</button>
-
-    <!-- History Modal -->
-    <div id="history-modal" class="modal">
-        <div class="modal-content">
-            <h2>History</h2>
-            <ul id="history-list"></ul>
-            <button class="close-button" onclick="closeHistoryModal()">Close</button>
-        </div>
-    </div>
-    <style>
-       
-       #scheduleForm {
-    background-color: #fff;
-    padding: 20px;
-    margin: 20px auto;
-    width: 300px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-#scheduleForm label {
-    font-size: 16px;
-    margin-bottom: 5px;
-    display: block;
-}
-
-#scheduleForm select,
-#scheduleForm input[type="time"] {
-    width: 100%;
-    padding: 8px;
-    margin: 5px 0 15px 0;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
-
-#scheduleForm button {
-    width: 100%;
-    padding: 10px;
-    background-color: #4CAF50;
-    color: #fff;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-#scheduleForm button:hover {
-    background-color: #45a049;
-}
-
-/* Styling for schedule manager */
-#scheduleManager {
-    background-color: #fff;
-    padding: 20px;
-    margin: 20px auto;
-    width: 320px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-#scheduleManager h2 {
-    font-size: 24px;
-    color: #333;
-    text-align: center;
-}
-
-#scheduleList {
-    list-style-type: none;
-    padding: 0;
-}
-
-#scheduleList li {
-    background-color: #ffd6d6;
-    padding: 10px;
-    margin: 5px 0;
-    border-radius: 5px;
-    font-size: 16px;
-    display: flex;
-    justify-content: space-between;
-    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.322)  ;
-}
-
-#scheduleList li span {
-    font-weight: bold;
-}
-
-#resetAll {
-    width: 100%;
-    padding: 10px;
-    background-color: #e74c3c;
-    color: #fff;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 20px;
-}
-
-#resetAll:hover {
-    background-color: #c0392b;
-}
-
-/* Hidden elements */
-.hidden {
-    display: none;
-}
-    </style>
- <h1>Reading Schedule</h1>
- <form id="scheduleForm">
-     <label for="subject">Subject:</label>
-     <select id="subject">
-         <option>Bangla First Paper</option>
-         <option>Bangla Second Paper</option>
-         <option>English First Paper</option>
-         <option>English Second Paper</option>
-         <option>Physics</option>
-         <option>Chemistry</option>
-         <option>Biology</option>
-         <option>Islam</option>
-         <option>Math</option>
-         <option>Higher Math</option>
-         <option>ICT</option>
-         <option>BGS</option>
-     </select>
-     <br><br>
-     <label for="time">Time:</label>
-     <input type="time" id="time" required>
-     <br><br>
-     <button type="submit">Set Schedule</button>
- </form>
- 
- <div id="scheduleManager" class="hidden">
-     <h2>Schedule Manager</h2>
-     <ul id="scheduleList"></ul>
-     <button id="resetAll"><i class="fas fa-trash-alt"></i> Reset All</button>
- </div>
-
- <audio id="notificationSound" src="notification.mp3" class="hidden"></audio>
-
-  
-  
-  <div class="mah-background-animation"></div>
-  <h1>Study Progress Tracker</h1>
-  <button id="mah-addChapterButton">Add Completed Chapter/Topic</button>
-  <button id="mah-viewProgressButton">View Study Progress</button>
-
-  <!-- Add Completed Chapter Modal -->
-  <div id="mah-addChapterModal" class="mah-modal mah-hidden">
-    <div class="mah-modal-content">
-      <div class="mah-modal-background-animation"></div>
-      <span class="close" id="mah-closeAddChapter">&times;</span>
-      <h2>Select subject and add completed chapters or topics</h2>
-      <div id="mah-subjectList" class="mah-subject-list"></div>
-      <div class="mah-modal-footer">
-        <button id="mah-saveButton">save</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- View Progress Modal -->
-  <div id="mah-viewProgressModal" class="mah-modal mah-hidden">
-    <div class="mah-modal-content">
-      <div class="mah-modal-background-animation"></div>
-      <span class="mah-close" id="mah-closeViewProgress">&times;</span>
-      <h2>Reading Progress</h2>
-      <ul id="mah-progressList"></ul>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
   <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+    // Import the functions you need from the SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
+    import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-messaging.js";
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyAKx_SDYuKMMxumQ0-LurDKFuJealqdA7U",
-    authDomain: "dppushn-otification.firebaseapp.com",
-    projectId: "dppushn-otification",
-    storageBucket: "dppushn-otification.firebasestorage.app",
-    messagingSenderId: "656610319409",
-    appId: "1:656610319409:web:7519cbd4de540f130f0910",
-    measurementId: "G-GE6TR9Q6V4"
-  };
+    // Your Firebase configuration object
+    const firebaseConfig = {
+      apiKey: "AIzaSyAKx_SDYuKMMxumQ0-LurDKFuJealqdA7U",
+      authDomain: "dppushn-otification.firebaseapp.com",
+      projectId: "dppushn-otification",
+      storageBucket: "dppushn-otification.firebasestorage.app",
+      messagingSenderId: "656610319409",
+      appId: "1:656610319409:web:7519cbd4de540f130f0910",
+      measurementId: "G-GE6TR9Q6V4"
+    };
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
-  <script src="https://www.gstatic.com/firebasejs/9.8.2/firebase-app.js"></script>
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+    // Initialize Firebase Cloud Messaging
+    const messaging = getMessaging(app);
+
+    // Request Notification Permissions
+    Notification.requestPermission()
+      .then((permission) => {
+        if (permission === "granted") {
+          console.log("Notification permission granted.");
+
+          // Get the FCM registration token
+          getToken(messaging, {
+            vapidKey: "BP6cz64LCNNDVgiQZKKPWBu2GFde66HaYQPPlo-jX9IiEOtWZFrg7Ks-FM6dwlqs_vJ8f-oR-djfT1PmTPy-tKI"
+          }).then((currentToken) => {
+            if (currentToken) {
+              console.log("FCM Token:", currentToken);
+              // Save the token to your server for sending notifications later
+            } else {
+              console.warn("No registration token available. Request permission to generate one.");
+            }
+          }).catch((err) => {
+            console.error("An error occurred while retrieving token: ", err);
+          });
+        } else {
+          console.warn("Notification permission denied.");
+        }
+      })
+      .catch((err) => {
+        console.error("An error occurred while requesting permission: ", err);
+      });
+
+    // Listen for incoming messages
+    onMessage(messaging, (payload) => {
+      console.log("Message received: ", payload);
+      // Show notification or update the UI
+      alert("Notification received: " + payload.notification.title);
+    });
+  </script>
+
+  <!-- Register Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/firebase-messaging-sw.js')
+        .then((registration) => {
+          console.log("Service Worker registered with scope:", registration.scope);
+        })
+        .catch((err) => {
+          console.error("Service Worker registration failed:", err);
+        });
+    }
+  </script>
 </body>
 </html>
