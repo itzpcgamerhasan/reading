@@ -5,22 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Push Notifications Setup</title>
   <link rel="manifest" href="manifest.json">
-    <link rel="serviceWorker" href="sw.js">
-    <script>
-        if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker
-          .register("sw.js")
-          .then((registration) => {
-            console.log("ServiceWorker registration successful with scope: ", registration.scope);
-          })
-          .catch((error) => {
-            console.error("ServiceWorker registration failed: ", error);
-          });
-      });
-    }
-    
-    </script>
+    <link rel="serviceWorker" href="firebase-messaging-sw.js">
+   
 </head>
 <body>
   <h1>Firebase Push Notificationsdsadd</h1>
@@ -86,6 +72,16 @@
   </script>
 
   <!-- Register Service Worker -->
- 
+ <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('firebase-messaging-sw.js')
+        .then((registration) => {
+          console.log("Service Worker registered with scope:", registration.scope);
+        })
+        .catch((err) => {
+          console.error("Service Worker registration failed:", err);
+        });
+    }
+  </script>
 </body>
 </html>
