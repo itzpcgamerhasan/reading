@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Push Notifications Setup</title>
+   <link rel="serviceWorker" href="firebase-messaging-sw.js">
 </head>
 <body>
   <h1>Firebase Push Notifications</h1>
@@ -71,7 +72,7 @@
   <!-- Register Service Worker -->
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/firebase-messaging-sw.js')
+      navigator.serviceWorker.register('firebase-messaging-sw.js')
         .then((registration) => {
           console.log("Service Worker registered with scope:", registration.scope);
         })
