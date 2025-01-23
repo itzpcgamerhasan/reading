@@ -10,61 +10,7 @@
   <h1>Firebase Push Notifications</h1>
   <p>Ensure you allow notifications for this site.</p>
 
-  <script type="module">
-    // Import the functions you need from the Firebase SDKs
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-    import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-messaging.js";
-
-    // Firebase configuration object
-    const firebaseConfig = {
-      apiKey: "AIzaSyAKx_SDYuKMMxumQ0-LurDKFuJealqdA7U",
-      authDomain: "dppushn-otification.firebaseapp.com",
-      projectId: "dppushn-otification",
-      storageBucket: "dppushn-otification.firebasestorage.app",
-      messagingSenderId: "656610319409",
-      appId: "1:656610319409:web:7519cbd4de540f130f0910",
-      measurementId: "G-GE6TR9Q6V4"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const messaging = getMessaging(app);
-
-    // Request notification permissions
-    Notification.requestPermission()
-      .then((permission) => {
-        if (permission === "granted") {
-          console.log("Notification permission granted.");
-          
-          // Get the FCM token
-          getToken(messaging, {
-            vapidKey: "BP6cz64LCNNDVgiQZKKPWBu2GFde66HaYQPPlo-jX9IiEOtWZFrg7Ks-FM6dwlqs_vJ8f-oR-djfT1PmTPy-tKI"
-          })
-          .then((currentToken) => {
-            if (currentToken) {
-              console.log("FCM Token:", currentToken);
-              // Send the token to your server to send push notifications
-            } else {
-              console.warn("No registration token available. Request permission to generate one.");
-            }
-          })
-          .catch((err) => {
-            console.error("An error occurred while retrieving token: ", err);
-          });
-        } else {
-          console.warn("Notification permission denied.");
-        }
-      })
-      .catch((err) => {
-        console.error("An error occurred while requesting permission: ", err);
-      });
-
-    // Listen for incoming messages
-    onMessage(messaging, (payload) => {
-      console.log("Message received: ", payload);
-      alert(`Notification received: ${payload.notification.title}`);
-    });
-  </script>
+ 
 
   <!-- Register Service Worker -->
   <script>
