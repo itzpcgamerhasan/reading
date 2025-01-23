@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Push Notifications Setup</title>
+  <link rel="manifest" href="./manifest.json"> <!-- Correct manifest file reference -->
 </head>
 <body>
   <h1>Firebase Push Notifications</h1>
@@ -34,7 +35,7 @@
       .then((permission) => {
         if (permission === "granted") {
           console.log("Notification permission granted.");
-
+          
           // Get the FCM token
           getToken(messaging, {
             vapidKey: "BP6cz64LCNNDVgiQZKKPWBu2GFde66HaYQPPlo-jX9IiEOtWZFrg7Ks-FM6dwlqs_vJ8f-oR-djfT1PmTPy-tKI"
@@ -70,7 +71,7 @@
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
         navigator.serviceWorker
-          .register("./firebase-messaging-sw.js") // Correct relative path
+          .register("./firebase-messaging-sw.js") // Correct path to the service worker
           .then((registration) => {
             console.log("ServiceWorker registration successful with scope: ", registration.scope);
           })
